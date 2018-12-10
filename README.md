@@ -5,7 +5,9 @@ Pre-requisites: Python
 1. Install required Python modules...
 
 pip install keyboard
+
 pip install mido
+
 pip install python-rtmidi
 
 2. Put the files in your Bitwig Controller Scripts folder. (The .py Python file can be anywhere but one may as well keep them together)
