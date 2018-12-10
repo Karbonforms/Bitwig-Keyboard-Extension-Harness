@@ -72,6 +72,7 @@ function onSysex0(data) {
 
 var old_values = [ 0.0, 0.0, 0.0, 0.0 ];
 
+// WARNING!! BRAINDEAD CODE!!!
 function toggleSend(number) {
    println("send toggle recieved for " + number);
 
