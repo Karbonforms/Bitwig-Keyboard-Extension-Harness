@@ -1,9 +1,18 @@
 import mido
 import keyboard
 
+#NOTE: here on the python side, mido automatically adds the sysex start and end values.
+
 #these are arbitrary
 ID = [0x1, 0x2, 0x9, 0x5]
+
 SENDID = ID + [0x9, 0x4]
+
+FIRSTSYNTH = [0x9, 0x9]
+OPENMAIN = [0x8, 0x8]
+
+FIRSTSYNTHID = ID + FIRSTSYNTH
+OPENMAINID = ID + OPENMAIN
 
 MMC = [0x7f, 0x7f, 0x06]
 
@@ -27,6 +36,8 @@ send2 = keyboard.add_hotkey('ctrl+shift+2', lambda: sendmidi( SENDID + [0x2] ) )
 send3 = keyboard.add_hotkey('ctrl+shift+3', lambda: sendmidi( SENDID + [0x3] ) )
 send4 = keyboard.add_hotkey('ctrl+shift+4', lambda: sendmidi( SENDID + [0x4] ) )
 
+synth1 = keyboard.add_hotkey('ctrl+shift+o', lambda: sendmidi( FIRSTSYNTHID ) )
+synth1 = keyboard.add_hotkey('ctrl+alt+o', lambda: sendmidi( OPENMAINID ) )
 
 print("Press ESC to stop.")
 keyboard.wait('esc')

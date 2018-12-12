@@ -2,12 +2,25 @@ loadAPI(7);
 
 const NAME = "KLF Extensions";
 
-const ID = "f001020905";
-const SENDID = ID.concat("0904");
-const SENDID1 = SENDID.concat("01").concat("f7");
-const SENDID2 = SENDID.concat("02").concat("f7");
-const SENDID3 = SENDID.concat("03").concat("f7");
-const SENDID4 = SENDID.concat("04").concat("f7");
+// NOTE: here on the js/controller api side, we must manually add the sysex start and end values.
+
+const SYSEX_START = "f0";
+const SYSEX_END = "f7";
+
+const ID = "01020905";
+const START = SYSEX_START + ID;
+
+const SENDID = START.concat("0904");
+const SENDID1 = SENDID.concat("01").concat(SYSEX_END);
+const SENDID2 = SENDID.concat("02").concat(SYSEX_END);
+const SENDID3 = SENDID.concat("03").concat(SYSEX_END);
+const SENDID4 = SENDID.concat("04").concat(SYSEX_END);
+
+const FIRSTSYNTH = "0909";
+const FIRSTSYNTHID = START.concat(FIRSTSYNTH).concat(SYSEX_END);
+
+const OPENMAIN = "0808";
+const OPENMAINID = START.concat(OPENMAIN).concat(SYSEX_END);
 
 //const MMC = [0x7f, 0x7f, 0x06]
 
@@ -26,6 +39,20 @@ function init() {
    track.getSend(2).value().markInterested();
    track.getSend(3).value().markInterested();
    track.name().markInterested();
+
+   // for open MAIN device
+   devices = track.createDeviceBank(32);
+   for (var i = 0; i < 32; ++i) {
+      devices.getDevice(i).name().markInterested();
+      devices.getDevice(i).isWindowOpen().markInterested();
+   }
+   devices.itemCount().markInterested();
+   
+   // for open first synth
+   synth = track.createCursorDevice("Primary", "No idea", 0, CursorDeviceFollowMode.FIRST_INSTRUMENT);
+   synth.isWindowOpen().markInterested();
+   synth_open = synth.isWindowOpen();
+
    println(NAME + " initialized!");
 }
 
@@ -55,20 +82,46 @@ function onSysex0(data) {
       case SENDID1:
          toggleSend(0);
          break;
-
       case SENDID2:
          toggleSend(1);
          break;
-
       case SENDID3:
          toggleSend(2);
          break;
-
       case SENDID4:
          toggleSend(3);
          break;
+
+      case OPENMAINID:
+         openMAIN();
+         break;
+   
+      case FIRSTSYNTHID:
+         openSynth();
+         break;
    }
 }
+
+function openMAIN() {
+   println("openMAIN");
+   var foundDevice = null;
+   const numDevices = devices.itemCount().get();
+   println(numDevices);
+   for (var i = 0; i < numDevices; i++) {
+      foundDevice = devices.getDevice(i);
+      var name = foundDevice.name().get();
+      println(name);
+      if (name.endsWith("MAIN"))
+         break;
+   }
+   if (foundDevice !== null)
+      foundDevice.isWindowOpen().toggle();
+}
+
+function openSynth() {
+   synth_open.toggle();
+}
+
 
 var old_values = [ 0.0, 0.0, 0.0, 0.0 ];
 

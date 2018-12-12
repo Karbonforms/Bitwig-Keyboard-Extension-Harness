@@ -1,5 +1,15 @@
 # Bitwig-Keyboard-Extension-Harness
 
+Current demonstrative functions:
+
+Move playhead left/right with left/right arrow keys. (May be redundant with BW 2.5)
+
+Toggle one of the first 4 sends on a selected track to 0 and back to what it was. Braindead implementation. Guaranteed buggy. WIP.
+
+Open GUI of first synth on selected track with ctrl+shift+o. Due to way BW works, this device may not be the device you are looking for, in which case see next function...
+
+Open GUI of first device on selected track whose name ends with "MAIN". Clunky and not particularly robust as yet.
+
 Pre-requisites: Python, a virtual midi port.
 
 1. Install required Python modules...
